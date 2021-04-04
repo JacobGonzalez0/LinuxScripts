@@ -19,7 +19,7 @@ server {
 
 server {
 	listen 443 ssl http2;
-	server_name code.hakase-labs.io;
+	server_name "+ $domainname +";
 
 	ssl_certificate /etc/letsencrypt/live/$server_name/fullchain.pem;
 	ssl_certificate_key /etc/letsencrypt/live/$server_name/privkey.pem;
