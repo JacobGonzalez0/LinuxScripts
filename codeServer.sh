@@ -2,19 +2,20 @@
 
 domainname=$(hostname)
 
-sudo apt update 
-sudo apt install nginx nodejs -y
+apt update 
+apt install nginx nodejs -y
 wget https://github.com/cdr/code-server/releases/download/v3.9.2/code-server-3.9.2-linux-amd64.tar.gz
 tar -xf code-server-3.9.2-linux-amd64.tar.gz
 mv code-server-*/ bin/
 chmod 777 bin/code-server
 mkdir -p ~/data
 
-
+echo "Enter username for codeserver to install on"
+read selecteduser
 echo "Enter a password for code-server"
 read -s password
 
-sudo echo "
+echo "
 [Unit]
 Description=code-server
 After=nginx.service
@@ -23,7 +24,7 @@ After=nginx.service
 User=code
 WorkingDirectory=/home/code
 Environment=PASSWORD=$password
-ExecStart=/home/$USER/bin/code-server --host 127.0.0.1 --port 7777 --user-data-dir /home/$USER/data --auth password
+ExecStart=/home/$selecteduser/bin/code-server --host 127.0.0.1 --port 7777 --user-data-dir /home/$selecteduser/data --auth password
 Restart=always
 
 [Install]
@@ -40,7 +41,7 @@ server {
 	ssl_certificate_key /etc/letsencrypt/live/$domainname/privkey.pem;
 
 	location / {
-		proxy_pass http://127.0.0.1:8080/;
+		proxy_pass http://127.0.0.1:7777/;
 		proxy_set_header Host \$host;
 		proxy_set_header Upgrade \$http_upgrade;
 		proxy_set_header Connection upgrade;
@@ -50,6 +51,8 @@ server {
 " >> /etc/nginx/sites-available/codeserver
 
 ln -s /etc/nginx/sites-available/codeserver /etc/nginx/sites-enabled/
+systemctl daemon-reload 
 systemctl restart nginx
+systemctl restart code-server
 echo "You should be able to see your codeserver server at http://$domainname:8020"
 
