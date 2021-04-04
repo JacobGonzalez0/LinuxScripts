@@ -1,13 +1,13 @@
 #!/bin/bash
 
 apt update 
-apt install wget curl git go default-jdk nodejs npm maria-db-server nginx nano certbot -y
+apt install wget curl git default-jdk nodejs nginx nano certbot -y
 systemctl stop nginx
 
 read -p "Please enter your domain name: " domainname
 read -p "Please enter your email :" email
 
-certbot certonly --standalone --agree-tos -m email -d $domainname
+certbot certonly --standalone --agree-tos -m $email -d $domainname
 
 echo "
 server {
@@ -26,8 +26,8 @@ server {
 
 	location / {
 		proxy_pass http://127.0.0.1:8080/;
-		proxy_set_header Host $host;
-		proxy_set_header Upgrade $http_upgrade;
+		proxy_set_header Host \$host;
+		proxy_set_header Upgrade \$http_upgrade;
 		proxy_set_header Connection upgrade;
 		proxy_set_header Accept-Encoding gzip;
 	}
