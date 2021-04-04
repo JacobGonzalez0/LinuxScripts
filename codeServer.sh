@@ -24,9 +24,9 @@ After=nginx.service
 
 [Service]
 User=code
-WorkingDirectory=/home/code
+WorkingDirectory=/home/$selecteduser
 Environment=PASSWORD=$password
-ExecStart=/home/$selecteduser/bin/code-server --host 127.0.0.1 --port 7777 --user-data-dir /home/$selecteduser/data --auth password
+ExecStart=/home/$selecteduser/bin/bin/code-server --host 127.0.0.1 --port 7777 --user-data-dir /home/$selecteduser/data --auth password
 Restart=always
 
 [Install]
@@ -54,6 +54,8 @@ server {
 
 ln -s /etc/nginx/sites-available/codeserver /etc/nginx/sites-enabled/
 systemctl daemon-reload 
+systemctl enable nginx
+systemctl enable code-server
 systemctl restart nginx
 systemctl restart code-server
 echo "You should be able to see your codeserver server at http://$domainname:8020"
