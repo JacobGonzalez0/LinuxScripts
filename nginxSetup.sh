@@ -35,5 +35,6 @@ server {
 " >> /etc/nginx/sites-available/tomcat
 
 ln -s /etc/nginx/sites-available/tomcat /etc/nginx/sites-enabled/
+mv /etc/nginx/sites-enabled/default /etc/nginx/default-back
 systemctl restart nginx
 echo "You should be able to see your java server at http://"$domainname
